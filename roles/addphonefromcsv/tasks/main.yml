@@ -1,7 +1,7 @@
 ---
 - name: Read and register CSV file
   community.general.read_csv:
-    path: '{{ playbook_dir }}/data/phonelist.csv'
+    path: "{{ playbook_dir }}/data/{{ csvfile | default('Test_Phone_List') }}.csv"
   register: phonelist
   delegate_to: localhost
 
