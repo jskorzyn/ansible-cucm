@@ -15,8 +15,8 @@
           <ns:addPhone sequence="1">
             <phone>
               <name>{{ device_name | default('SEP123456789012') }}</name>
-              <product>{{ model | default('Cisco 7975') }}</product>
-              <model>{{ model | default('Cisco 7975') }}</model>
+              <product>{{ device_model | default('Cisco 7975') }}</product>
+              <model>{{ device_model | default('Cisco 7975') }}</model>
               <description>{{ phone_desc | default('Test Phone') }}</description>
               <class>Phone</class>
               <protocol>SIP</protocol>
@@ -26,8 +26,8 @@
               <lines>
                 <line>
                   <dirn>
-                    <pattern>{{ dn | default('1001') }}</pattern>
-                    <routePartition>{{ routepartition | default('none') }}</routePartition>
+                    <pattern>{{ line_number | default('1001') }}</pattern>
+                    <routePartition>{{ line_partition | default('none') }}</routePartition>
                   </dirn>
                 <index>1</index>
                 </line>
