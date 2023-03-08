@@ -1,0 +1,9 @@
+---
+- name: Add Phone from CSV file with line
+  hosts: cucm
+  connection: local
+  gather_facts: false
+
+  roles:
+    - showcucmversion
+    - addphonefromcsv

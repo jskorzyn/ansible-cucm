@@ -1,0 +1,8 @@
+---
+- name: Show CUCM version
+  hosts: cucm
+  connection: local
+  gather_facts: false
+
+  roles:
+    - showcucmversion

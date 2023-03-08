@@ -1,0 +1,22 @@
+---
+ansible-navigator:
+  ansible:
+    # config:
+    #   help: False
+    #   path: ./ansible.cfg
+    inventory:
+        help: False
+        entries:
+          - ./inventory
+  execution-environment:
+    container-engine: podman
+    enabled: true
+    image: quay.io/jskorzyn/cucm:1.1
+    pull:
+      arguments:
+        - "--tls-verify=false"
+      policy: missing
+  logging:
+    level: critical
+  playbook-artifact:
+    enable: False

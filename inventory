@@ -1,0 +1,6 @@
+[cucm]
+172.27.11.14
+
+[cucm:vars]
+axl_user = user01
+axl_password = qw21QW@!

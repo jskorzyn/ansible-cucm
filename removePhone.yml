@@ -1,0 +1,9 @@
+---
+- name: Remove Phone
+  hosts: cucm
+  connection: local
+  gather_facts: false
+
+  roles:
+    - showcucmversion
+    - removephone

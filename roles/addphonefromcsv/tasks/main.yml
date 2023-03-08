@@ -1,0 +1,53 @@
+---
+- name: Read and register CSV file
+  community.general.read_csv:
+    path: '{{ playbook_dir }}/data/phonelist.csv'
+  register: phonelist
+  delegate_to: localhost
+
+- name: Add phone with line
+  ansible.builtin.uri:
+    url: "https://{{ ansible_host }}:8443/axl/"
+    method: POST
+    headers:
+      Content-Type: text/xml
+      SOAPAction: '"CUCM:DB ver={{ axl_version }} addPhone"'
+    force_basic_auth: true
+    user: "{{ hostvars[ansible_host].axl_user }}"
+    password: "{{ hostvars[ansible_host].axl_password }}"
+    body: >-
+      <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://www.cisco.com/AXL/API/{{ axl_version }}">
+        <soapenv:Body>
+          <ns:addPhone sequence="1">
+            <phone>
+              <name>{{ phonelist.list[item | int].device_name | default('SEP123456789012') }}</name>
+              <product>{{ phonelist.list[item | int].device_model | default('Cisco 7975') }}</product>
+              <model>{{ phonelist.list[item | int].device_model | default('Cisco 7975') }}</model>
+              <description>{{ phone_desc | default('Test Phone') }}</description>
+              <class>Phone</class>
+              <protocol>SIP</protocol>
+              <protocolSide>User</protocolSide>
+              <callingSearchSpaceName/>
+              <devicePoolName>Default</devicePoolName>
+              <lines>
+                <line>
+                  <dirn>
+                    <pattern>{{ phonelist.list[item | int].line_number | default('1002') }}</pattern>
+                    <routePartition>{{ phonelist.list[item | int].line_partition | default('none') }}</routePartition>
+                  </dirn>
+                <index>1</index>
+                </line>
+              </lines>
+            </phone>
+          </ns:addPhone>
+        </soapenv:Body>
+      </soapenv:Envelope>
+    validate_certs: false
+    return_content: true
+    status_code:
+      - 200
+      - 500
+  register: response
+  changed_when: response.status == 200
+  failed_when: response.status == 500 and '<axlcode>-239' not in response.content
+  with_sequence: start=0 end={{ phonelist.list | length - 1 }}

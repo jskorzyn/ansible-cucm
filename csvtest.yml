@@ -1,0 +1,29 @@
+---
+- name: Testing CSV
+  hosts: localhost
+  connection: localhost
+  gather_facts: false
+
+  tasks:
+    - name: Read and register CSV file
+      community.general.read_csv:
+        path: '{{ playbook_dir }}/data/phonelist.csv'
+      register: csvresult
+
+    - name: Show content
+      ansible.builtin.debug:
+        var: csvresult
+
+    - name: Show number of list elements
+      ansible.builtin.debug:
+        var: '{{ csvresult.list | length }}'
+
+    - name: Display each row
+      ansible.builtin.debug:
+        var: csvresult.list[{{ item }}].device_name
+      with_sequence: start=0 end={{ csvresult.list | length - 1 }}
+
+    - name: Display each row with msg
+      ansible.builtin.debug:
+        msg: '{{ csvresult.list[item | int].device_name }}'
+      with_sequence: start=0 end={{ csvresult.list | length - 1 }}
